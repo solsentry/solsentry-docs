@@ -62,6 +62,13 @@ The threat signal was in the operator's history across 61 prior confirmed rug pu
 
 ---
 
+### Live Alert Output
+
+![4kxscute Hunter Alert](4kxscute-alert.png)
+
+> Real output from SolSentry's Telegram alert system. Hunter tracking 
+> operator `4kxscute` auto-triggered a scan on the new deployment — 
+> returning Risk 100/100 with all critical flags active.
 ## Current Metrics
 
 | Metric | Value |
