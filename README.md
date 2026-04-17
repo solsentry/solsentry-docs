@@ -39,7 +39,7 @@ flowchart TD
     C -->|Confirmed threat?| D
     D["STAGE 3 — Forensic
     Bundle detection (Helius Enhanced TX)
-    Drain tracking (3-hop fund flow)
+    Drain tracking (10-hop fund flow)
     AI Explainer (multilingual)"]
     D --> E[🚨 ALERT — Telegram Bot]
 
@@ -79,26 +79,25 @@ SolSentry already knew who he was.
 
 ---
 
-## Current Metrics (v2.3.5 — April 12, 2026)
-                                                                                                                                                                                                
-  | Metric | Value |                                                                                                                                                                            
-  |---|---|                                                                                                                                                                                     
-  | Token scans executed | 7,325+ |                                                                                                                                                             
-  | Token discoveries (monitored) | 269,000+ |                                                                                                                                                  
-  | Tokens flagged elevated risk | 6,000+ |                                                                                                                                                     
-  | Prediction accuracy | **86% (canônico, resolve rate subindo)** |                                                                                                                            
-  | False positives | **0** |                                                                                                                                                                 
-  | Autonomous agents alive | 26 |                                                                                                                                                              
-  | Hunters active | 30 |
-  | Wallets tracked | 4,390+ |                                                                                                                                                                  
-  | Operators mapped | 43 reais (reconstruindo) |                                                                                                                                             
-  | Bot clusters identified | 435 únicos |
-  | Connected operator wallets | 847 |                                                                                                                                                          
-  | KOL accounts tracked | 99 |
-  | Continuous runtime | 171.8h (local, no VPS yet) |                                                                                                                                           
-  | RPC endpoints | 9 (Helius, Alchemy, Triton) |                                                                                                                                             
-  | Tests passing | 246 |                                                                                                                                                                       
-  | ALife feedback loops | ✅ Consciousness + MetaLearning wired |
+## Current Metrics (v2.3.18 — April 17, 2026)
+
+| Metric | Value |
+|---|---|
+| Token scans executed | **13,131+** |
+| Prediction accuracy | **75.9%** |
+| False positives at HIGH+ risk | **0** |
+| Serial deployers identified | **47** |
+| Operators mapped | **778** |
+| Bot clusters identified | **1,537** |
+| Wallets tracked across operator networks | **8,402** |
+| KOL accounts tracked | **99** |
+| Hunters active | **30** |
+| Continuous runtime | **193h+ (local, no VPS yet)** |
+| RPC endpoints | **9 (Helius ×5, Alchemy ×3, Triton ×1)** |
+| Tests passing | **318** |
+| ALife feedback loops | ✅ Consciousness + MetaLearning wired |
+
+> **On accuracy:** 75.9% reflects **zero confirmed false positives** — every incorrect prediction is a false negative (stealth rugs that launched with clean on-chain metrics and evaded early detection). The system never cries wolf.
 
 ---
 
@@ -123,9 +122,9 @@ Three entity types linked across every scan:
 
 | Entity | Description | Count |
 |---|---|---|
-| **OperatorProfiles** | Serial deployer identities tracked across wallets | 109 operators, 847 wallets |
-| **BotClusters** | Coordinated wallet groups (same-block buys, shared funding) | 229 clusters |
-| **ShillNetworks** | KOL-to-operator connections via early-buy patterns | 106 KOLs tracked |
+| **OperatorProfiles** | Serial deployer identities tracked across wallets | 778 operators · 8,402 wallets |
+| **BotClusters** | Coordinated wallet groups (same-block buys, shared funding) | 1,537 clusters |
+| **ShillNetworks** | KOL-to-operator connections via early-buy patterns | 99 KOLs tracked |
 
 Every scan cross-references the graph. The more the system scans, the harder it is for operators to hide behind new wallets.
 
@@ -159,7 +158,7 @@ Every scan cross-references the graph. The more the system scans, the harder it 
 - **Data Sources:** Helius DAS + Enhanced TX · DexScreener · InsightX · Nansen · Jupiter
 - **AI:** Claude Sonnet (multilingual risk explainer, 10 calls/hr)
 - **Delivery:** Telegram Bot API (forum topics, real-time alerts)
-- **Testing:** 246 tests · 9 test files · 93+ commits
+- **Testing:** 318 tests · 11 test files · 122 commits
 - **ALife:** Consciousness wired · MetaLearning auto_adjust · DNA snapshots · hunters_archive
 - **Applied:** DD.xyz/Webacy API grant · Helius Startup Launchpad
 
@@ -167,8 +166,8 @@ Every scan cross-references the graph. The more the system scans, the harder it 
 
 ## Roadmap
 
-**Q2 2026** — VPS deployment (24/7) · WebSocket Stage 3 · Free public API · Token-2022 extension checks  
-**Q3 2026** — React dashboard (drain map, operator timeline) · MCP server · x402 micropayments · B2B API  
+**Q2 2026** — VPS deployment (24/7) · WebSocket activation (built, pending VPS) · Free public API  
+**Q3 2026** — React dashboard v1 (drain map, operator timeline) · x402 micropayments (live v0) · B2B API  
 **Q4 2026** — Wallet Reputation Score API · Copy Trade Safety Filter · Launchpad Vetting API  
 **2027+** — Cross-chain operator tracking (ETH, BSC) · Institutional compliance API · Seed round
 
@@ -178,7 +177,7 @@ Every scan cross-references the graph. The more the system scans, the harder it 
 
 **Crash Diniz** — Solo founder and developer.  
 Self-taught since the early 2000s: Slackware, Unix, Oracle networking. No university, no bootcamp.  
-Started learning Python last year — 218 tests, full async architecture, 5,688 mainnet scans.
+Started learning Python last year — 318 tests, full async architecture, 13,131+ mainnet scans.
 
 > *"Started learning Python last year" is the setup. The metrics above are the punchline.*
 
