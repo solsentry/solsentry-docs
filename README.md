@@ -121,29 +121,28 @@ SolSentry detected this by watching the operator, not the token. Every individua
 
 ---
 
-## Current Metrics (v2.3.21 — April 22, 2026)
+## Current Metrics (April 24, 2026)
 
 | Metric | Value | Source |
 |---|---|---|
-| Token scans executed | **24,214** | `GET /v1/stats` |
-| Prediction accuracy | **86.0%** | `was_correct=True / resolved` |
-| Resolve rate | **97.1%** | `resolved / total_predictions` |
-| False positives at CRITICAL risk | **0** | canonical across 24K predictions |
-| Serial deployers identified | **345** | `total_rugs ≥ 2 OR total_tokens ≥ 5` |
-| Operators mapped | **1,144** | `operator_profiles.json` |
-| Confirmed rugs (cumulative) | **3,867+** | aggregate across operators |
-| Bot clusters identified | **1,663** | `intelligence.json` |
-| Wallets tracked | **9,604** | `wallet_profiles` |
-| KOL accounts tracked | **106** | `kol_watchlist.json` |
-| HIGH/CRITICAL alerts emitted | **18,500+** | telegram alert log |
-| Continuous runtime | **210h+** | VPS deployed (Hetzner, Ashburn VA) |
-| RPC endpoints | **9** (Helius ×5, Alchemy ×3, Triton ×1) | `infra/rpc_pool.py` |
-| Tests passing | **532** | `pytest tests/ -q` |
-| ALife feedback loops | ✅ Consciousness + MetaLearning | `brain/` |
+| Token scans executed | **28,404** | `GET /v1/stats` |
+| Prediction accuracy | **86.7%** | `was_correct=True / resolved` |
+| Resolve rate | **92.7%** | `resolved / total_predictions` |
+| False positives at CRITICAL risk | **0** | canonical across all resolved predictions |
+| Serial deployers identified | **472** | `total_rugs ≥ 2 OR total_tokens ≥ 5` |
+| Operators mapped | **1,653** | `operator_profiles.json` |
+| Confirmed rugs (cumulative) | **5,668+** | aggregate across operators |
+| HIGH-risk alerts emitted | **20,998** | alert log |
+| Bot clusters identified | **2,470** | `intelligence.json` |
+| Wallets tracked | **13,957** | `wallet_profiles` |
+| Wallets with confirmed rugs | **1,518** | `GET /v1/stats` |
+| RPC endpoints | **9** (Helius ×5, Alchemy ×3, Triton ×1) | `core/rpc_pool.py` |
+| Tests passing | **735** | `pytest tests/ -q` |
+| ALife feedback loops | ✅ Consciousness + MetaLearning | `core/alife/` |
 
-> **On accuracy:** 86.0% reflects **zero confirmed false positives in the CRITICAL band** — every incorrect prediction is a false negative (stealth rugs that launched with clean on-chain metrics and evaded early detection). The system never cries wolf.
+> **On accuracy:** 86.7% reflects **zero confirmed false positives in the CRITICAL band** — every incorrect prediction is a false negative (stealth rugs that launched with clean on-chain metrics and evaded early detection). The system never cries wolf.
 
-Live-at-all-times: `curl https://api.solsentry.app/v1/stats`.
+Live-at-all-times: `curl https://api.solsentry.app/v1/stats` · health: `curl https://api.solsentry.app/health/invariants`
 
 ---
 
@@ -243,7 +242,7 @@ Full roadmap: [`docs/ROADMAP.md` in the main repo](https://github.com/solsentrya
 
 **Crash Diniz** — Solo founder and developer.
 Self-taught since the early 2000s: Slackware, Unix, Oracle networking. No university, no bootcamp.
-Started learning Python last year — 532 tests, full async architecture, 24,214+ mainnet scans, zero false positives in the CRITICAL band, 210h VPS runtime without a team.
+Started learning Python last year — 735 tests, full async architecture, 28,400+ mainnet scans, zero false positives in the CRITICAL band, without a team.
 
 > *"Started learning Python last year" is the setup. The metrics above are the punchline.*
 
