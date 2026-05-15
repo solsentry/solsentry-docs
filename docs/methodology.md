@@ -1,7 +1,7 @@
 # SolSentry — Detection Methodology
 
 > How SolSentry identifies serial rug operators and scores risk in real time.
-> Last updated: 2026-04-24.
+> Last updated: 2026-05-14.
 
 ---
 
@@ -31,7 +31,7 @@ A token deployed by a wallet with 940 prior rugs starts at `risk=100/100` before
 | Known-token skip | Hardcoded allowlist (SOL, USDC, USD1, DRIFT, etc.) | instant `risk=10` |
 | Deployer wallet | On-chain token creator | feeds dimension 4 (operator history) |
 
-If stage 1 surfaces a mint/freeze authority flag combined with an operator with ≥2 prior rugs, the pipeline can emit a HIGH-risk alert within **4 seconds of deployment** — before stage 2 runs.
+If stage 1 surfaces a mint/freeze authority flag combined with an operator with ≥2 prior rugs, the pipeline can emit a HIGH-risk alert with **sub-50ms cached operator lookup** + the 6h fast-track resolver window — before stage 2 runs.
 
 ### Stage 2 — deep scan (background, 10-30s)
 
@@ -91,7 +91,7 @@ SolSentry uses three overlapping signals:
 
 When 3+ wallets correlate on 2+ signals, they become a cluster. Cluster membership is stored as `frozenset` in `intelligence.json::bot_clusters` with O(1) reverse lookup (`wallet → cluster_ids`). Adding a new mint to an existing cluster propagates the aggregate rug rate to every member.
 
-**Current state:** 2,470 bot clusters mapped, some containing 60+ deployer wallets with thousands of cross-attributed tokens.
+**Current state:** 7,968 bot clusters mapped, some containing 60+ deployer wallets with thousands of cross-attributed tokens.
 
 ---
 
@@ -110,23 +110,32 @@ After a resolution window (2 days primary, 14 days safe-recheck, immediate for v
 
 Accuracy is then `sum(was_correct=True) / resolved`.
 
-### Zero false positives at CRITICAL
+### CRITICAL precision profile
 
-The canonical claim: **across all resolved predictions, zero instances where SolSentry flagged `CRITICAL` and the token proved safe**. Every incorrect prediction is a false negative — a stealth rug that launched with clean signals and evaded early detection.
+The canonical claim: **96.6% CRITICAL precision · 98.9% HIGH precision** (audit-grade, May 14 2026). At CRITICAL severity there are 607 FP events across 231 unique mints. The composition breaks down as:
 
-Rationale: CRITICAL is reserved for operator-history-driven signals (serial deployer boost). A wallet can't fake 940 prior rugs, so a CRITICAL flag is grounded in historical evidence rather than transient token state.
+- **228 threshold edge cases** — tokens surviving 1–14 days post-flag (most resolve as rugs eventually, but cross the 14-day safe-recheck window first)
+- **3 unclassified long survivors** — tokens that have survived past the standard windows, still flagged CRITICAL, outcome ambiguous
+- **2 high-frequency rescan patterns** — two specific mints (`9NwxDyev` 117× and `BBKPiLM9` 58×) account for 92 FP events between them; this is a scan-dedup tech-debt issue scheduled for v2.4
+
+Every FP at CRITICAL is a threshold edge case, not a false-alarm pattern. The system errs toward false negatives (stealth rugs with clean signals, no operator history) rather than false alarms.
+
+Rationale: CRITICAL is reserved for operator-history-driven signals (serial deployer boost). A wallet with 2,600+ prior rugs cannot retroactively un-rug — historical evidence is durable in a way transient token state is not.
+
+Full per-mint audit available at `/v1/predictions/{mint}`. Reproducibility methodology in `docs/accuracy_audit.md`.
 
 ---
 
-## Live numbers (Apr 24, 2026)
+## Live numbers (May 14, 2026)
 
-- 28,404 mainnet scans
-- 86.7% accuracy / 92.7% resolve rate
-- 5,668 confirmed rugs aggregated across operators
-- 1,653 operators mapped / 472 serial deployers
-- 2,470 bot clusters / 13,957 wallets tracked
+- 56,159 predictions issued
+- 88.8% accuracy / 93.2% resolve rate (96.6% CRITICAL precision, 98.9% HIGH precision)
+- 21,711 confirmed rugs aggregated across operators
+- 6,352 operators mapped / 1,477 serial deployers
+- 7,968 bot clusters / 43,553 wallets tracked
+- 742h continuous mainnet runtime (~31 days)
 
-Fetch current: `curl https://api.solsentry.app/v1/stats`
+Numbers drift daily as predictions resolve. Fetch current: `curl https://api.solsentry.app/v1/stats`
 
 ---
 

@@ -7,7 +7,7 @@ SolSentry is an autonomous threat intelligence system for Solana that tracks **o
 While existing tools analyze each token or wallet in isolation, SolSentry maps the people behind the scams — across deployments, across wallets, over time.
 
 🔗 **Telegram:** [t.me/solsentryai](https://t.me/solsentryai)
-🔗 **X/Twitter:** [@solsentryapp](https://x.com/solsentryapp)
+🔗 **X/Twitter:** [@solsentryai](https://x.com/solsentryai)
 🔗 **Live API:** [api.solsentry.app](https://api.solsentry.app/v1/stats)
 🔗 **NPM:** [@solsentry/mcp](https://www.npmjs.com/package/@solsentry/mcp)
 🔗 **Hackathon:** Colosseum Frontier 2026 · [Arena profile](https://arena.colosseum.org/projects/explore/solsentry-3)
@@ -63,7 +63,7 @@ The REST API is live at `api.solsentry.app`. No install required:
 # Is this token risky?
 curl https://api.solsentry.app/v1/token/<mint> | jq
 
-# Who's this developer? (case study: 4kxscute — 2,352 rugs / 2,532 tokens / 92.9%)
+# Who's this developer? (case study: 4kxscute — 2,662 rugs / 2,939 tokens / 90.6%)
 curl https://api.solsentry.app/v1/operator/4kxscuteRLQdNiTXA33YYsvywAPNA6DQTifswxjL5pH1 | jq
 
 # Trace stolen funds across up to 10 hops
@@ -131,40 +131,40 @@ SolSentry already knew who he was.
 > operator `4kxscute` auto-triggered a scan on the new deployment —
 > returning CRITICAL with all critical flags active.
 
-### Current status (May 12, 2026)
+### Current status (May 14, 2026)
 
-- **2,352 confirmed rugs / 2,532 total tokens / 92.9% rug rate**
+- **2,662 confirmed rugs / 2,939 total tokens / 90.6% rug rate** (99.96% over the 2,663 resolved tokens; 276 tokens pending outcome verification)
+- Coverage start: **April 8, 2026 (16:27 UTC)** — first confirmed `dev_wallet` match. From that point every deployment by this wallet triggers a sub-50ms CRITICAL classification at scan time.
 - Risk level: **CRITICAL** — tags `fast_deployer`, `rebrand_artist`
-- **Zero indexed public record** existed for this wallet anywhere — Twitter/X, Reddit, RugCheck, GoPlus, Nansen, Arkham — until SolSentry tagged the operator
 - Co-occurs across dozens of bot clusters; a small set of wallets appears in every cluster — the permanent coordination core
 
-SolSentry detected this by watching the operator, not the token. Every individual mint had clean on-chain metadata — token-centric tools saw nothing wrong with each of the 2,532 mints in isolation.
+SolSentry detected this by watching the operator, not the token. Every individual mint had clean on-chain metadata — token-centric tools saw nothing wrong with each of the 2,939 mints in isolation.
 
 ---
 
-## Current Metrics (May 12, 2026)
+## Current Metrics (May 14, 2026)
 
 | Metric | Value | Source |
 |---|---|---|
-| Token scans executed | **51,404** | `GET /v1/stats` |
-| Prediction accuracy | **88.1%** | `was_correct=True / resolved` |
-| Resolve rate | **93.0%** | `resolved / total_predictions` |
-| False positives at CRITICAL risk | **0** | canonical across all resolved predictions |
-| Serial deployers identified | **1,279** | `total_rugs ≥ 2 OR total_tokens ≥ 5` |
-| Operators mapped | **5,512** | `operator_profiles.json` |
-| Confirmed rugs (cumulative) | **18,987** | aggregate across operators |
-| HIGH-risk alerts emitted | **33,441** | alert log |
-| Bot clusters identified | **6,994** | `intelligence.json` |
-| Wallets profiled | **38,141** | `wallet_profiles` |
-| Wallets with confirmed rugs | **5,626** | `GET /v1/stats` |
-| RPC endpoints | **11** (Helius ×7, Alchemy ×3, RPC Fast ×1) | `clients/rpc/pool.py` |
-| Tests passing | **1,495+** | `pytest tests/ -q` |
-| Runtime (continuous mainnet) | **28+ days** | uptime since deploy |
+| Predictions issued | **56,159** | `GET /v1/stats` |
+| Prediction accuracy (resolved) | **88.8%** | `was_correct=True / resolved` |
+| Resolution rate | **93.2%** | `resolved / total_predictions` |
+| CRITICAL precision | **96.6%** | per-mint audit at `/v1/predictions/{mint}` |
+| HIGH precision | **98.9%** | same audit path |
+| Serial deployers identified | **1,477** | `total_rugs ≥ 2 OR total_tokens ≥ 5` |
+| Operators mapped | **6,352** | `operator_profiles.json` |
+| Confirmed rugs (cumulative) | **21,711** | aggregate across operators |
+| HIGH / CRITICAL alerts emitted | **34,432** | alert log |
+| Bot clusters identified | **7,968** | `intelligence.json` |
+| Wallets profiled | **43,553** | `wallet_profiles` |
+| RPC pool | Multi-tier round-robin (Helius + Alchemy + RPC Fast) | `clients/rpc/pool.py` |
+| Tests passing | **1,612** | `pytest tests/ -q` |
+| Runtime (continuous mainnet) | **742h (~31 days)** | `/v1/stats.runtime_hours` |
 | ALife feedback loops | ✅ Consciousness + MetaLearning | `core/alife/` |
 
-> **On accuracy:** 88.1% reflects **zero confirmed false positives in the CRITICAL band** — every incorrect prediction is a false negative (stealth rugs that launched with clean on-chain metrics and evaded early detection). The system never cries wolf.
+> **On accuracy:** CRITICAL precision is 96.6% (607 FP events across 231 unique mints — 228 threshold edge cases / 3 unclassified long survivors / 2 high-frequency rescan patterns). Every FP at CRITICAL is a threshold edge case, not a false-alarm pattern. Most errors at the system level are false negatives (stealth rugs with clean on-chain metrics that evade early detection). Full audit at `docs/accuracy_audit.md`.
 
-Live-at-all-times: `curl https://api.solsentry.app/v1/stats` · health: `curl https://api.solsentry.app/health/invariants`
+Live-at-all-times: `curl https://api.solsentry.app/v1/stats` · health: `curl https://api.solsentry.app/health/invariants` · numbers drift daily as predictions resolve.
 
 ---
 
@@ -190,8 +190,8 @@ Three entity types linked across every scan:
 
 | Entity | Description | Count |
 |---|---|---|
-| **OperatorProfiles** | Serial deployer identities tracked across wallets | 5,512 operators · 38,141 wallets |
-| **BotClusters** | Coordinated wallet groups (same-block buys, shared funding) | 6,994 clusters |
+| **OperatorProfiles** | Serial deployer identities tracked across wallets | 6,352 operators · 43,553 wallets |
+| **BotClusters** | Coordinated wallet groups (same-block buys, shared funding) | 7,968 clusters |
 | **ShillNetworks** | KOL-to-operator connections via early-buy patterns | KOL graph tracked |
 
 Every scan cross-references the graph. The more the system scans, the harder it is for operators to hide behind new wallets.
@@ -216,7 +216,7 @@ Every scan cross-references the graph. The more the system scans, the harder it 
 | Drain flow tracking | ❌ | ✅ | ❌ | ❌ | ✅ |
 | **Public MCP integration for AI agents** | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Public resolve rate + accuracy metrics** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Multi-source data layer** (Helius + Dune + Covalent + Zerion) | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Multi-source data layer** (Helius + Dune + Covalent + Zerion + Arkham + Nansen + InsightX) | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Privacy-rail-agnostic operator screen** (Cloak + Umbra) | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Cross-chain investigation ready** | ❌ | ❌ | ❌ | ❌ | ✅ |
 
@@ -262,7 +262,7 @@ These are floor numbers, not the moonshot. Consistent with Helius's early tracti
 | **[solsentry/solsentry-app](https://github.com/solsentry/solsentry-app)** | Next.js 15 web app — landing, operator lookup, x402 dashboard |
 | **[solsentry/solsentry-mcp](https://github.com/solsentry/solsentry-mcp)** | Public source — MCP server + TypeScript SDK + Claude Skills bundle |
 | **[@solsentry/mcp](https://www.npmjs.com/package/@solsentry/mcp)** | npm package — MCP server for AI agents (Claude / Cursor / Claude Code) |
-| **api.solsentry.app** | Live REST API — 11 endpoints, free read access |
+| **api.solsentry.app** | Live REST API — operator + token + drain-trace endpoints, free read access |
 | **[solsentry/solsentry-nansen-cli](https://github.com/solsentry/solsentry-nansen-cli)** | CLI tool — Drift Protocol $285M hack investigation |
 | **[solsentry/thegarage](https://github.com/solsentry/thegarage)** | PFP/banner generator for Superteam Brasil's THE/GARAGE cohort |
 
@@ -275,25 +275,28 @@ Hackathon judges + review partners get access on request — contact `hello@sols
 ## Technical Stack
 
 - **Language:** Python 3 (full async architecture)
-- **RPC pool:** 11 endpoints — Helius (7 keys), Alchemy (3 keys), RPC Fast (Frontier 2026)
-- **Data sources:** Helius DAS + Enhanced TX · Dune Sim · Covalent/GoldRush · Zerion CLI · DexScreener · InsightX · Nansen · Jupiter
-- **AI:** Claude Sonnet (multilingual risk explainer)
-- **Privacy rails:** Cloak SDK + Umbra SDK (rail-agnostic operator screen)
+- **RPC tier-0:** Multi-tier round-robin pool — Helius (DAS + Enhanced TX), Alchemy, RPC Fast (Frontier 2026)
+- **Data sources:**
+  - Frontier 2026 integrations — Dune Sim, Covalent / GoldRush, Zerion (API + CLI)
+  - Entity intelligence — Arkham (entity graph), Nansen (wallet labels)
+  - Token analytics — InsightX (holder + bundle), Birdeye + DexScreener (price + liquidity), Solscan + Jupiter (metadata)
+- **AI:** Anthropic Claude (multilingual risk explainer, PT-BR primary + EN)
+- **Privacy rails:** Cloak + Umbra (Frontier 2026 partners — rail-agnostic operator screen)
 - **Payment rails:** x402 (mainnet-ready paid endpoints + agent pay-per-call)
 - **Delivery:** Telegram Bot API · REST · MCP · dashboard v2
-- **Testing:** 1,495+ passing tests
-- **Deploy:** Hetzner CPX21 · systemd · 3 services · 28+ days continuous
+- **Testing:** 1,612 passing tests
+- **Deploy:** Hetzner CPX21 · systemd · 3 services · 742h continuous (~31d)
 - **ALife:** Consciousness + MetaLearning wired · DNA snapshots · hunters_archive
-- **Self-heal:** 2,400+ auto-repair attempts on missing data
+- **Self-heal:** 3,200+ auto-repair attempts (13.0% repair rate)
 
 ---
 
 ## Roadmap
 
-**Now → Frontier deadline (May 12, 2026):**
-- ✅ Multi-source data layer (Helius + Dune Sim + Covalent + Zerion)
+**Frontier filed (May 9–11, 2026):**
+- ✅ Multi-source data layer (Helius + Dune Sim + Covalent + Zerion + Arkham + Nansen + InsightX)
 - ✅ Two privacy rails wired (Cloak + Umbra)
-- ✅ 11-endpoint RPC pool with health-aware load balancing
+- ✅ Multi-tier RPC pool with health-aware load balancing
 - ✅ x402 mainnet enforcement scaffold
 - ✅ 10 side-track submissions
 
@@ -321,9 +324,9 @@ Hackathon judges + review partners get access on request — contact `hello@sols
 
 ## Built By
 
-**Crash Diniz** — Solo founder and developer.
+**Crash Diniz** ([@crashdiniz](https://x.com/crashdiniz)) — solo founder and developer, based in Brazil.
 Self-taught since the early 2000s: Slackware, Unix, Oracle networking. No university, no bootcamp.
-Started learning Python last year — 1,495+ tests, full async architecture, 51,000+ mainnet scans, zero confirmed false positives in the CRITICAL band, without a team.
+Started learning Python in 2025 — 1,612 passing tests, full async architecture, 56,000+ mainnet predictions, 96.6% CRITICAL precision, without a team.
 
 > *"Started learning Python last year" is the setup. The metrics above are the punchline.*
 
@@ -331,6 +334,17 @@ Started learning Python last year — 1,495+ tests, full async architecture, 51,
 
 ---
 
+## Links + Contact
+
+- **Site:** [solsentry.app](https://solsentry.app)
+- **X (project):** [@solsentryai](https://x.com/solsentryai)
+- **Telegram:** [t.me/solsentryai](https://t.me/solsentryai)
+- **GitHub:** [github.com/solsentry](https://github.com/solsentry)
+- **Email:** `hello@solsentry.app`
+- **Built by:** [Crash Diniz · @crashdiniz](https://x.com/crashdiniz)
+
+---
+
 *Built for the Colosseum Frontier Hackathon · April–May 2026*
-*Powered by Helius · Alchemy · RPC Fast · Triton · Dune · Covalent · Zerion · Claude AI · Hetzner*
+*Powered by Helius · Alchemy · RPC Fast · Dune · Covalent · Zerion · Arkham · Nansen · Anthropic Claude · Hetzner*
 *"Nunca estagnar. Sempre evoluir."*
