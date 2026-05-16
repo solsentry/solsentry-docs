@@ -146,20 +146,20 @@ SolSentry detected this by watching the operator, not the token. Every individua
 
 | Metric | Value | Source |
 |---|---|---|
-| Predictions issued | **56,159** | `GET /v1/stats` |
-| Prediction accuracy (resolved) | **88.8%** | `was_correct=True / resolved` |
+| Predictions issued | **58,184** | `GET /v1/stats` |
+| Prediction accuracy (resolved) | **89.3%** | `was_correct=True / resolved` |
 | Resolution rate | **93.2%** | `resolved / total_predictions` |
 | CRITICAL precision | **96.6%** | per-mint audit at `/v1/predictions/{mint}` |
 | HIGH precision | **98.9%** | same audit path |
 | Serial deployers identified | **1,477** | `total_rugs ≥ 2 OR total_tokens ≥ 5` |
 | Operators mapped | **6,352** | `operator_profiles.json` |
-| Confirmed rugs (cumulative) | **21,711** | aggregate across operators |
+| Confirmed rugs (cumulative) | **23,136** | aggregate across operators |
 | HIGH / CRITICAL alerts emitted | **34,432** | alert log |
 | Bot clusters identified | **7,968** | `intelligence.json` |
 | Wallets profiled | **43,553** | `wallet_profiles` |
 | RPC pool | Multi-tier round-robin (Helius + Alchemy + RPC Fast) | `clients/rpc/pool.py` |
 | Tests passing | **1,612** | `pytest tests/ -q` |
-| Runtime (continuous mainnet) | **742h (~31 days)** | `/v1/stats.runtime_hours` |
+| Runtime (continuous mainnet) | **773h (~32 days)** | `/v1/stats.runtime_hours` |
 | ALife feedback loops | ✅ Consciousness + MetaLearning | `core/alife/` |
 
 > **On accuracy:** CRITICAL precision is 96.6% (607 FP events across 231 unique mints — 228 threshold edge cases / 3 unclassified long survivors / 2 high-frequency rescan patterns). Every FP at CRITICAL is a threshold edge case, not a false-alarm pattern. Most errors at the system level are false negatives (stealth rugs with clean on-chain metrics that evade early detection). Full audit at `docs/accuracy_audit.md`.
@@ -190,7 +190,7 @@ Three entity types linked across every scan:
 
 | Entity | Description | Count |
 |---|---|---|
-| **OperatorProfiles** | Serial deployer identities tracked across wallets | 6,352 operators · 43,553 wallets |
+| **OperatorProfiles** | Serial deployer identities tracked across wallets | 6,873 operators · 45,368 wallets |
 | **BotClusters** | Coordinated wallet groups (same-block buys, shared funding) | 7,968 clusters |
 | **ShillNetworks** | KOL-to-operator connections via early-buy patterns | KOL graph tracked |
 
@@ -284,8 +284,8 @@ Hackathon judges + review partners get access on request — contact `hello@sols
 - **Privacy rails:** Cloak + Umbra (Frontier 2026 partners — rail-agnostic operator screen)
 - **Payment rails:** x402 (mainnet-ready paid endpoints + agent pay-per-call)
 - **Delivery:** Telegram Bot API · REST · MCP · dashboard v2
-- **Testing:** 1,612 passing tests
-- **Deploy:** Hetzner CPX21 · systemd · 3 services · 742h continuous (~31d)
+- **Testing:** 1,612+ passing tests
+- **Deploy:** Hetzner CPX21 · systemd · 3 services · 773h continuous (~32d)
 - **ALife:** Consciousness + MetaLearning wired · DNA snapshots · hunters_archive
 - **Self-heal:** 3,200+ auto-repair attempts (13.0% repair rate)
 
@@ -326,7 +326,7 @@ Hackathon judges + review partners get access on request — contact `hello@sols
 
 **Crash Diniz** ([@crashdiniz](https://x.com/crashdiniz)) — solo founder and developer, based in Brazil.
 Self-taught since the early 2000s: Slackware, Unix, Oracle networking. No university, no bootcamp.
-Started learning Python in 2025 — 1,612 passing tests, full async architecture, 56,000+ mainnet predictions, 96.6% CRITICAL precision, without a team.
+Started learning Python in 2025 — 1,612+ passing tests, full async architecture, 58,000+ mainnet predictions, 96.6% CRITICAL precision, without a team.
 
 > *"Started learning Python last year" is the setup. The metrics above are the punchline.*
 
