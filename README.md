@@ -17,16 +17,19 @@ Live references:
 
 ## Canonical live snapshot
 
-- `80,017` predictions tracked
-- `91.2%` aggregate accuracy
-- `97.9% CRITICAL precision - auditable per-mint`
-- `95.3% HIGH precision`
-- `94.4% MEDIUM precision`
-- `10,112` operators profiled
-- `7,004` serial ruggers identified
-- `78.0%` dev wallet coverage
-- `~1,367h` continuous runtime
+- `83,408` predictions tracked
+- `91.4%` aggregate accuracy
+- `97.8% CRITICAL precision - auditable per-mint`
+- `95.7% HIGH precision`
+- `94.6% MEDIUM precision`
+- `77.9%` dev wallet coverage
+- `~1,492h` continuous runtime
 - backend version: `v2.3.21`
+
+> Mint-level metrics above are the canonical, audit-anchored claims (verifiable
+> per-mint at `/v1/predictions/{mint}`). Operator-level aggregate counts
+> (operators profiled, serial ruggers) are withheld from published headline
+> numbers pending a corrected-attribution re-scan (M1).
 
 ## What SolSentry documents here
 
@@ -42,8 +45,10 @@ first. If a legacy doc disagrees with `/v1/stats`, `/v1/stats` wins.
 
 ## Public positioning guardrails
 
-- Use `97.9% CRITICAL precision - auditable per-mint`.
+- Cite the live `critical_precision_pct` from `/v1/stats` (`97.8%` today),
+  always framed as `auditable per-mint` — re-verify on the day.
 - Prefer operator-risk framing over token-only framing.
+- Never publish operator-level aggregate counts as proof until the M1 re-scan.
 
 ## License
 
