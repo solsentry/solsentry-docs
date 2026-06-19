@@ -15,21 +15,10 @@ Live references:
   `2026-06-09`
 - Frontend/docs hosting: `Cloudflare/Vercel` (not on the VPS)
 
-## Canonical live snapshot
+## Canonical live surfaces
 
-- `83,408` predictions tracked
-- `91.4%` aggregate accuracy
-- `97.8% CRITICAL precision - auditable per-mint`
-- `95.7% HIGH precision`
-- `94.6% MEDIUM precision`
-- `77.9%` dev wallet coverage
-- `~1,492h` continuous runtime
-- backend version: `v2.3.21`
-
-> Mint-level metrics above are the canonical, audit-anchored claims (verifiable
-> per-mint at `/v1/predictions/{mint}`). Operator-level aggregate counts
-> (operators profiled, serial ruggers) are withheld from published headline
-> numbers pending a corrected-attribution re-scan (M1).
+- precision is auditable per-mint at `/v1/predictions/{mint}` (live)
+- API and product status should be verified against the live service
 
 ## What SolSentry documents here
 
@@ -40,15 +29,14 @@ Live references:
 
 ## Publishing rule
 
-When a public fact changes, update this repo from the canonical live block
-first. If a legacy doc disagrees with `/v1/stats`, `/v1/stats` wins.
+When a public fact changes, update this repo from live API and product
+surfaces first. If a legacy doc disagrees with the live service, the live
+service wins.
 
 ## Public positioning guardrails
 
-- Cite the live `critical_precision_pct` from `/v1/stats` (`97.8%` today),
-  always framed as `auditable per-mint` — re-verify on the day.
+- Use `precision is auditable per-mint at /v1/predictions/{mint} (live)`.
 - Prefer operator-risk framing over token-only framing.
-- Never publish operator-level aggregate counts as proof until the M1 re-scan.
 
 ## License
 
