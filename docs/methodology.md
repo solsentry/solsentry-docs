@@ -1,6 +1,6 @@
 # SolSentry — Detection Methodology
 
-> How SolSentry identifies serial rug operators and scores risk in real time.
+> How SolSentry identifies serial rug operators and scores token risk.
 > Last updated: 2026-05-14.
 
 ---
@@ -28,7 +28,7 @@ A token deployed by a wallet with 940 prior rugs starts at `risk=100/100` before
 |---|---|---|
 | Mint authority + freeze authority | Helius `getAccountInfo` | `MINT_AUTHORITY` flag if mint authority still live post-launch (rug vector) |
 | Metadata resolution | Helius DAS / DexScreener | symbol, name, decimals — flag `UNK` for 90s retry |
-| Known-token skip | Hardcoded allowlist (SOL, USDC, USD1, DRIFT, etc.) | instant `risk=10` |
+| Known-token skip | Hardcoded allowlist (SOL, USDC, USD1, DRIFT, etc.) | `risk=10`, no scan |
 | Deployer wallet | On-chain token creator | feeds dimension 4 (operator history) |
 
 If stage 1 surfaces a mint/freeze authority flag combined with an operator with ≥2 prior rugs, the pipeline can emit a HIGH-risk alert with **sub-50ms cached operator lookup** + the 6h fast-track resolver window — before stage 2 runs.
@@ -148,4 +148,4 @@ Numbers drift daily as predictions resolve. Fetch current: `curl https://api.sol
 
 ---
 
-*SolSentry is live on Solana mainnet. API: `api.solsentry.app`. Package: `@solsentry/mcp`. All numbers above are queryable in real time.*
+*SolSentry is live on Solana mainnet. API: `api.solsentry.app`. Package: `@solsentry/mcp`. All numbers above are queryable through the API.*
