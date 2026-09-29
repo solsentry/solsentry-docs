@@ -2,6 +2,7 @@
 
 > How prediction accuracy and CRITICAL precision are computed, what they include, and what they exclude.
 > Last updated: 2026-05-14.
+> ⚠️ Every figure below is the **May 14, 2026 audit snapshot**, kept for the method. Current values are served live at `/v1/stats` (per-tier precision in `precision_by_tier`); each call is auditable per mint at `/v1/predictions/{mint}`.
 > Companion: [`docs/methodology.md`](./methodology.md) (the detection pipeline) + [submission CORRECTIONS log](https://github.com/solsentry/sentry-core/blob/main/docs/CORRECTIONS_2026-05-14.md) (post-archaeology audit of v4.0 claims).
 
 ---

@@ -26,7 +26,7 @@ A token deployed by a wallet with 940 prior rugs starts at `risk=100/100` before
 
 | Check | Source | Signal |
 |---|---|---|
-| Mint authority + freeze authority | Helius `getAccountInfo` | `MINT_AUTHORITY` flag if mint authority still live post-launch (rug vector) |
+| Mint authority + freeze authority | Solana RPC `getAccountInfo` (free-tier endpoints first, Helius as fallback) | `MINT_AUTHORITY` flag if mint authority still live post-launch (rug vector) |
 | Metadata resolution | Helius DAS / DexScreener | symbol, name, decimals — flag `UNK` for 90s retry |
 | Known-token skip | Hardcoded allowlist (SOL, USDC, USD1, DRIFT, etc.) | `risk=10`, no scan |
 | Deployer wallet | On-chain token creator | feeds dimension 4 (operator history) |
@@ -91,7 +91,7 @@ SolSentry uses three overlapping signals:
 
 When 3+ wallets correlate on 2+ signals, they become a cluster. Cluster membership is stored as `frozenset` in `intelligence.json::bot_clusters` with O(1) reverse lookup (`wallet → cluster_ids`). Adding a new mint to an existing cluster propagates the aggregate rug rate to every member.
 
-**Current state:** 7,968 bot clusters mapped, some containing 60+ deployer wallets with thousands of cross-attributed tokens.
+Some clusters contain 60+ deployer wallets with thousands of cross-attributed tokens. Current cluster counts: `/v1/stats`.
 
 ---
 
@@ -112,30 +112,24 @@ Accuracy is then `sum(was_correct=True) / resolved`.
 
 ### CRITICAL precision profile
 
-The canonical claim: **96.6% CRITICAL precision · 98.9% HIGH precision** (audit-grade, May 14 2026). At CRITICAL severity there are 607 FP events across 231 unique mints. The composition breaks down as:
+Precision is reported per tier and read live from `/v1/stats` (`precision_by_tier`) — never quoted from this page. The breakdown below is the **May 14, 2026 audit snapshot**, kept for method, not as a current figure: at CRITICAL severity there were 607 FP events across 231 unique mints, composed as:
 
 - **228 threshold edge cases** — tokens surviving 1–14 days post-flag (most resolve as rugs eventually, but cross the 14-day safe-recheck window first)
 - **3 unclassified long survivors** — tokens that have survived past the standard windows, still flagged CRITICAL, outcome ambiguous
 - **2 high-frequency rescan patterns** — two specific mints (`9NwxDyev` 117× and `BBKPiLM9` 58×) account for 92 FP events between them; this is a scan-dedup tech-debt issue scheduled for v2.4
 
-Every FP at CRITICAL is a threshold edge case, not a false-alarm pattern. The system errs toward false negatives (stealth rugs with clean signals, no operator history) rather than false alarms.
+In that snapshot every CRITICAL FP was a threshold edge case rather than a false-alarm pattern. Precision is high, not perfect; current values and every individual call are auditable per mint.
 
-Rationale: CRITICAL is reserved for operator-history-driven signals (serial deployer boost). A wallet with 2,600+ prior rugs cannot retroactively un-rug — historical evidence is durable in a way transient token state is not.
 
 Full per-mint audit available at `/v1/predictions/{mint}`. Reproducibility methodology in `docs/accuracy_audit.md`.
 
 ---
 
-## Live numbers (May 14, 2026)
+## Live numbers
 
-- 56,159 predictions issued
-- 88.8% accuracy / 93.2% resolve rate (96.6% CRITICAL precision, 98.9% HIGH precision)
-- 21,711 confirmed rugs aggregated across operators
-- 6,352 operators mapped / 1,477 serial deployers
-- 7,968 bot clusters / 43,553 wallets tracked
-- 742h continuous mainnet runtime (~31 days)
+Every figure (predictions issued, accuracy, per-tier precision, runtime) is served live — fetch it rather than copying it: `curl https://api.solsentry.app/v1/stats`
 
-Numbers drift daily as predictions resolve. Fetch current: `curl https://api.solsentry.app/v1/stats`
+
 
 ---
 
