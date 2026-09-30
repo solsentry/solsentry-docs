@@ -9,7 +9,7 @@
 
 SolSentry watches **operators**, not tokens. Each new Solana token launch is scored across four dimensions — on-chain metadata, holder distribution, bundle patterns, and operator history. The operator history dimension is what existing token-centric tools (RugCheck, GoPlus, Blockaid) don't have: a persistent profile of *the wallet behind the deployment*, built from every prior token that wallet has shipped.
 
-A token deployed by a wallet with 940 prior rugs starts at `risk=100/100` before any on-chain signal is analyzed.
+A token deployed by a wallet with a long record of prior confirmed rugs starts near the top of the risk scale before any on-chain signal is analyzed.
 
 ---
 
@@ -76,7 +76,7 @@ Every deployer wallet has an `OperatorProfile`:
 - `tags` (fast_deployer, rebrand_artist, pump_fun_farmer, etc.)
 - Bot cluster membership (frozenset-indexed, O(1) lookup)
 
-A wallet deploying its 941st rug gets this dimension at 100 regardless of what the token looks like.
+A wallet with a long record of confirmed rugs gets this dimension at its maximum regardless of what the token looks like.
 
 ---
 
@@ -91,7 +91,7 @@ SolSentry uses three overlapping signals:
 
 When 3+ wallets correlate on 2+ signals, they become a cluster. Cluster membership is stored as `frozenset` in `intelligence.json::bot_clusters` with O(1) reverse lookup (`wallet → cluster_ids`). Adding a new mint to an existing cluster propagates the aggregate rug rate to every member.
 
-Some clusters contain 60+ deployer wallets with thousands of cross-attributed tokens. Current cluster counts: `/v1/stats`.
+Large clusters can contain many deployer wallets with many cross-attributed tokens. Current cluster counts: `/v1/stats`.
 
 ---
 
@@ -110,32 +110,24 @@ After a resolution window (2 days primary, 14 days safe-recheck, immediate for v
 
 Accuracy is then `sum(was_correct=True) / resolved`.
 
-### CRITICAL precision profile
+### Precision
 
-Precision is reported per tier and read live from `/v1/stats` (`precision_by_tier`) — never quoted from this page. The breakdown below is the **May 14, 2026 audit snapshot**, kept for method, not as a current figure: at CRITICAL severity there were 607 FP events across 231 unique mints, composed as:
+This page quotes no accuracy or precision figures. Precision must be read next to the base rate of the resolved universe; figures are being re-measured. The label method is described in `docs/accuracy_audit.md`.
 
-- **228 threshold edge cases** — tokens surviving 1–14 days post-flag (most resolve as rugs eventually, but cross the 14-day safe-recheck window first)
-- **3 unclassified long survivors** — tokens that have survived past the standard windows, still flagged CRITICAL, outcome ambiguous
-- **2 high-frequency rescan patterns** — two specific mints (`9NwxDyev` 117× and `BBKPiLM9` 58×) account for 92 FP events between them; this is a scan-dedup tech-debt issue scheduled for v2.4
-
-In that snapshot every CRITICAL FP was a threshold edge case rather than a false-alarm pattern. Precision is high, not perfect; current values and every individual call are auditable per mint.
-
-
-Full per-mint audit available at `/v1/predictions/{mint}`. Reproducibility methodology in `docs/accuracy_audit.md`.
+Each prediction is auditable per mint at `/v1/predictions/{mint}`.
 
 ---
 
 ## Live numbers
 
-Every figure (predictions issued, accuracy, per-tier precision, runtime) is served live — fetch it rather than copying it: `curl https://api.solsentry.app/v1/stats`
-
+Volume counters (predictions issued, runtime, cluster counts) are served live: `curl https://api.solsentry.app/v1/stats`
 
 
 ---
 
 ## Limitations (honest framing)
 
-- **Pre-launch blindspot:** before a wallet deploys its 2nd token, SolSentry has no operator history — it falls back to dimensions 1-3 only. First-time rugs are the stealth-rug category where false negatives concentrate.
+- **Pre-launch blindspot:** before a wallet deploys its second token, SolSentry has no operator history — it falls back to dimensions 1-3 only. First-time rugs are the stealth-rug category where false negatives concentrate.
 - **Indexing lag:** fresh tokens can take 30s-10min to appear on DAS/DexScreener. The pipeline retries at 90s/300s/900s for UNK symbols, but a rug executed inside the first minute will escape the deep scan.
 - **Operator graph requires funding traceability:** mixers and peel chains (10+ hops through cold wallets) break the funding-lineage signal. The drain-trace endpoint surfaces up to 10 hops but classification beyond that is inferential.
 - **Not a trading signal:** SolSentry scores deployment risk, not price trajectory. A risk=10 token can still rug via exploit; a risk=100 token can still moon briefly before rugging.
